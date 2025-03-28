@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastgele Yemek Tarifi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        img {
+            width: 300px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍽️ Rastgele Yemek Tarifi</h1>
+    <button onclick="getRecipe()">Yeni Tarif Göster</button>
+    
+    <div id="recipe"></div>
+
+    <script>
+        function getRecipe() {
+            fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+            .then(response => response.json())
+            .then(data => {
+                const meal = data.meals[0];
+                document.getElementById("recipe").innerHTML = `
+                    <h2>${meal.strMeal}</h2>
+                    <p><strong>Kategori:</strong> ${meal.strCategory}</p>
+                    <p><strong>Bölge:</strong> ${meal.strArea}</p>
+                    <img src="${meal.strMealThumb}" alt="Yemek Resmi">
+                    <p><strong>Tarif:</strong> ${meal.strInstructions.substring(0, 300)}...</p>
+                    <a href="${meal.strYoutube}" target="_blank">📺 YouTube Videosu</a>
+                `;
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+                document.getElementById("recipe").innerHTML = "<p>Tarif yüklenemedi. Lütfen tekrar deneyin.</p>";
+            });
+        }
+
+        getRecipe();
+    </script>
+</body>
+</html>
